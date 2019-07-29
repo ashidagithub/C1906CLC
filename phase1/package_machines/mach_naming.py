@@ -141,5 +141,18 @@ def pick_given_name():
     return picked_name
 
 def pick_a_full_name():
-    full_name = pick_family_name() + pick_given_name()
+
+    sf = pick_family_name()
+    if len(sf)<=1:
+        sf = sf + '   '
+    else:
+        sf = sf + ' '
+
+    sg = pick_given_name()
+    if len(sg)<=1:
+        sg = sg + '   '
+    else:
+        sg = sg + ' '
+
+    full_name = sf + sg
     return full_name
