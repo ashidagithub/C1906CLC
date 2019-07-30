@@ -48,12 +48,6 @@ class Hero():
         print('速度=%2d' % (self.move_speed))
         return
 
-    def is_alive(self):
-        ''' 自检，判断是否还活着 '''
-        rtn = false
-        if self.life_force >0:
-            rtn = true
-        return rtn
 
     # Private method
     def __set_life_force(self, hero_type):

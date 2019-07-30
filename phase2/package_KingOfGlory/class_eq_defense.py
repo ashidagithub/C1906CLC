@@ -14,8 +14,8 @@ import sys
 
 sys.path.append('..')
 # 引用自定义的类及功能包
-from package_KingOfGlory.class_equipment import Equipment
 import package_KingOfGlory.global_var as GLV
+from package_KingOfGlory.class_equipment import Equipment
 
 
 class EQDefense(Equipment):
