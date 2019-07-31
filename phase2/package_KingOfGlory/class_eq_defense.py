@@ -91,7 +91,9 @@ class EQDefense(Equipment):
         elif skill_num == 9:  # +法术攻击
             pass
         elif skill_num == 10:  # +回血
-            self.restore_life_force = random.uniform(0.01, 0.1)
+            self.restore_life_force += random.uniform(0.01, 0.1)
+            if self.restore_life_force >= 0.1:
+                self.restore_life_force = 0.1
         else:
             pass
 

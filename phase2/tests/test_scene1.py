@@ -27,22 +27,27 @@ from package_KingOfGlory.class_eq_move import EQMove
 print('\n----------交战前---------')
 # 创建一个地方士兵
 h = Hero()
-eq = EQAttack()
+eq = EQMana()
 enemy = Soldier(h,eq)
 enemy.show_me()
 
 # 创建一个我方士兵
 h = Hero()
-eq = EQAttack()
+eq = EQMove()
 our_sol = Soldier(h,eq)
 our_sol.show_me()
 
-# 第一次交战
+# 仅一次交手，测试交战逻辑是否正确
+print('\n----------交战一次---------')
 if our_sol.move_speed > enemy.move_speed:
+    print('\n----------交战中：攻击方的变化---------')
     our_sol.attack()
+    print('\n----------交战中：被攻击方的变化---------')
     enemy.be_attacked(our_sol)
 else:
+    print('\n----------交战中：攻击方的变化---------')
     enemy.attack()
+    print('\n----------交战中：被攻击方的变化---------')
     our_sol.be_attacked(enemy)
 
 print('\n----------交战后---------')

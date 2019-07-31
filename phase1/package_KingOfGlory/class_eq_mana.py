@@ -14,8 +14,8 @@ import sys
 
 sys.path.append('..')
 # 引用自定义的类及功能包
-from package_KingOfGlory.class_equipment import Equipment
 import package_KingOfGlory.global_var as GLV
+from package_KingOfGlory.class_equipment import Equipment
 
 
 class EQMana(Equipment):
@@ -81,7 +81,7 @@ class EQMana(Equipment):
         elif skill_num == 2:  # +法术防御
             pass
         elif skill_num == 3:  # +回蓝
-            self.add_mana_restore += 0.05 * GLV.MAX_MANA_POWER
+            self.restore_mana_power += random.uniform(0.01, 0.1)
         elif skill_num == 4:  # +移动速度
             self.add_move_speed += 0.05 * GLV.MAX_MOVE_SPEED
         elif skill_num == 5:  # +最大生命

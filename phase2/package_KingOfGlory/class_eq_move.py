@@ -21,7 +21,7 @@ from package_KingOfGlory.class_equipment import Equipment
 class EQMove(Equipment):
 
     # 添加独有加成
-
+    # nothing
 
     def __init__(self):
         '''按规则随机生成攻击类道具 '''
@@ -64,7 +64,9 @@ class EQMove(Equipment):
         elif skill_num == 2:  # +法术防御
             self.add_mana_defense += 0.05 * GLV.MAX_DEFENSE
         elif skill_num == 3:  # +回蓝
-            self.add_mana_restore += 0.05 * GLV.MAX_MANA_POWER
+            self.restore_mana_power += random.uniform(0.01, 0.1)
+            if self.restore_mana_power >= 0.1:
+                self.restore_mana_power = 0.1
         elif skill_num == 4:  # +移动速度
             self.add_move_speed += 0.05 * GLV.MAX_MOVE_SPEED
         elif skill_num == 5:  # +最大生命

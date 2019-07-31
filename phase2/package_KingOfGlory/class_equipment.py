@@ -25,7 +25,7 @@ class Equipment():
     add_physical_defense = 0
 
     add_mana_defense = 0
-    add_mana_restore = 0   # 回蓝
+    restore_mana_power = 0.0   # 回蓝
 
     add_move_speed = 0
 
@@ -51,7 +51,7 @@ class Equipment():
         print('     物理攻击+%3d' % (self.add_physical_attack))
         print('     物理防御+%3d' % (self.add_physical_defense))
         print('     法术防御+%3d' % (self.add_mana_defense))
-        print('         回蓝+%3d' % (self.add_mana_restore))
+        print('         回蓝+%3d' % (self.restore_mana_power))
         print('     移动速度+%3d' % (self.add_move_speed))
         print('     最大生命+%3d' % (self.add_life_force))
         print('     最大法力+%3d' % (self.add_mana_power))

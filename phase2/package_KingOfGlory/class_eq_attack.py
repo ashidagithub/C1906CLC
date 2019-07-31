@@ -96,8 +96,12 @@ class EQAttack(Equipment):
             self.add_mana_power += 0.05 * GLV.MAX_MANA_POWER
         elif skill_num == 7:  # +暴击率
             self.critical_strik = random.uniform(0.1, 0.5)
+            if self.critical_strik>= 0.5:
+                self.critical_strik = 0.5
         elif skill_num == 8:  # +物理吸血
             self.physical_suck = random.uniform(0.1, 0.5)
+            if self.physical_suck >= 0.5:
+                self.physical_suck = 0.5
         elif skill_num == 9:  # +法术攻击
             pass
         elif skill_num == 10:  # +回血
