@@ -8,16 +8,18 @@
 #   士兵的类
 # ------------------------(max to 80 columns)-----------------------------------
 
+import random
 import sys
 
 sys.path.append('..')
 # 引用自定义的类及功能包
-import package_KingOfGlory.global_var as GLV
-from package_KingOfGlory.class_hero import Hero
-from package_KingOfGlory.class_eq_attack import EQAttack
-from package_KingOfGlory.class_eq_defense import EQDefense
-from package_KingOfGlory.class_eq_mana import EQMana
+from package_machines.mach_naming import pick_a_full_name
 from package_KingOfGlory.class_eq_move import EQMove
+from package_KingOfGlory.class_eq_mana import EQMana
+from package_KingOfGlory.class_eq_defense import EQDefense
+from package_KingOfGlory.class_eq_attack import EQAttack
+from package_KingOfGlory.class_hero import Hero
+import package_KingOfGlory.global_var as GLV
 
 
 class Soldier():
@@ -27,7 +29,8 @@ class Soldier():
         eq = arg[0]
 
         # 不需要计算的属性
-        self.__name = h.name
+        self.__mortal_name = pick_a_full_name()
+        self.__clone_from = h.name
         self.__position = h.position
         self.__weapon_name = eq.name
 
@@ -40,6 +43,7 @@ class Soldier():
         self.__physical_defense = h.physical_defense + eq.add_physical_defense
 
         self.__mana_defense = h.mana_defense + eq.add_mana_defense
+        self.__restore_mana = eq.add_mana_restore  # 回蓝
 
         # 仅部分道具有的特殊技能
         self.__critical_strik = 0.0
@@ -48,15 +52,15 @@ class Soldier():
         self.__restore_life_force = 0.0
 
         if type(eq) is EQAttack:
+            self.__weapon_type = '攻击类'
             self.__critical_strik = eq.critical_strik
             self.__physical_suck = eq.physical_suck
-            self.__weapon_type = '攻击类'
         elif type(eq) is EQDefense:
-            self.__restore_life_force = eq.restore_life_force
             self.__weapon_type = '防御类'
+            self.__restore_life_force = eq.restore_life_force
         elif type(eq) is EQMana:
-            self.__mana_attack = h.mana_attack + eq.add_mana_attack
             self.__weapon_type = '法术类'
+            self.__mana_attack = h.mana_attack + eq.add_mana_attack
         elif type(eq) is EQMove:
             self.__weapon_type = '移动类'
         else:
@@ -69,79 +73,159 @@ class Soldier():
     def show_me(self):
         print('\n-----招募了一个新的士兵-----')
         # print('\n-----只读（不会变化的）属性-----')
-        print('士兵名称:【%s】\t' % (self.name),end='')
-        print('士兵定位:%s(%s)\t' % (self.position, GLV.DICT_OF_HERO[self.position]),end='')
+        print('士兵名称:%s\t' % (self.name), end='')
+        print('士兵定位:%s(%s)\t' %
+              (self.position, GLV.DICT_OF_HERO[self.position]), end='')
         print('士兵武器:%s(%s)' % (self.weapon_name, self.__weapon_type))
-        #print('\n**不变的固有能力（所有士兵都具备的能力）**')
-        print('物攻力=%3d\t' % (self.physical_attack),end='')
-        print('法攻力=%3d\t' % (self.mana_attack),end='')
+        # print('\n**不变的固有能力（所有士兵都具备的能力）**')
+        print('物攻力=%3d\t' % (self.physical_attack), end='')
+        print('法攻力=%3d\t' % (self.mana_attack), end='')
         print('移动速度=%3d' % (self.move_speed))
-        #print('\n**不变的固有能力（依靠道具才具备的能力）**')
-        print('暴击率=%0.2f\t' % (self.critical_strik),end='')
-        print('物理吸血=%0.2f\t' % (self.physical_suck),end='')
+        # print('\n**不变的固有能力（依靠道具才具备的能力）**')
+        print('暴击率=%0.2f\t' % (self.critical_strik), end='')
+        print('物理吸血=%0.2f\t' % (self.physical_suck), end='')
         print('回血=%0.2f' % (self.restore_life_force))
+        print('回蓝=%0.2f' % (self.restore_mana))
 
         # print('\n-----只读（会变化的）属性-----')
-        #print('\n**随着战争而变化的能力，以下为当前数值*')
-        print('生命值=%3d\t' % (self.cur_life_force),end='')
-        print('法力值=%3d\t' % (self.cur_mana_power),end='')
-        print('物防力=%3d\t' % (self.cur_physical_defense),end='')
+        # print('\n**随着战争而变化的能力，以下为当前数值*')
+        print('生命值=%3d\t' % (self.cur_life_force), end='')
+        print('法力值=%3d\t' % (self.cur_mana_power), end='')
+        print('物防力=%3d\t' % (self.cur_physical_defense), end='')
         print('法防力=%3d' % (self.cur_mana_defense))
 
         return
 
     # 定义士兵类的只读（不变）属性 ----------------------------
-    @property # 士兵的姓名（不变）
+    @property  # 士兵的姓名（不变）
     def name(self):
-        return self.__name
+        dict = {self.__mortal_name: self.__clone_from}
+        return dict
 
-    @property # 士兵的定位（不变）
+    @property  # 士兵的定位（不变）
     def position(self):
         return self.__position
 
-    @property # 士兵的武器名称（不变）
+    @property  # 士兵的武器名称（不变）
     def weapon_name(self):
         return self.__weapon_name
 
-    @property # 移动速度（不变）
+    @property  # 移动速度（不变）
     def move_speed(self):
         return self.__move_speed
 
-    @property # 物理攻击力（不变）
+    @property  # 物理攻击力（不变）
     def physical_attack(self):
         return self.__physical_attack
 
-    @property # 法术攻击力（不变）
+    @property  # 法术攻击力（不变）
     def mana_attack(self):
         return self.__mana_attack
 
-    @property # 暴击率%（不变）
+    @property  # 回蓝%（不变）
+    def restore_mana(self):
+        return self.__restore_mana
+
+    @property  # 暴击率%（不变）
     def critical_strik(self):
         return self.__critical_strik
 
-    @property # 物理吸血%（不变）
+    @property  # 物理吸血%（不变）
     def physical_suck(self):
         return self.__physical_suck
 
-    @property # 回血%（不变）
+    @property  # 回血%（不变）
     def restore_life_force(self):
         return self.__restore_life_force
 
     # 定义士兵类的只读（可变）属性 ----------------------------
-    @property # 当前生命力
+    @property  # 当前生命力
     def cur_life_force(self):
         return self.__life_force
 
-    @property # 当前生命力
+    @property  # 当前生命力
     def cur_mana_power(self):
         return self.__mana_power
 
-    @property # 物理防御力（可变）
+    @property  # 物理防御力（可变）
     def cur_physical_defense(self):
         return self.__physical_defense
 
-    @property # 法术防御力（可变）
+    @property  # 法术防御力（可变）
     def cur_mana_defense(self):
         return self.__mana_defense
 
     # 定义士兵类的行为 ----------------------------
+    def check_status(self):
+        sta = ''
+        if self.cur_life_force <= 0:
+            sta = GLV.STATUS_OF_SOLDIER[2]  # 已经死亡
+        elif self.cur_life_force <= 0.05 * GLV.MAX_LIFE_FORCE:
+            sta = GLV.STATUS_OF_SOLDIER[1]  # 苟活状态，无力再战
+        else:
+            sta = GLV.STATUS_OF_SOLDIER[0]  # 健康状态，可以继续战斗
+        return sta
+
+    def attack(self):
+        print('--debug: %s 开始发动攻击' % self.name)
+        # 只有健康状态才能攻击
+        if self.check_status() == GLV.STATUS_OF_SOLDIER[0]:
+            # 如果能发起物理攻击，则消耗 10% 最大生命力
+            if self.physical_attack > 0:
+                print('--debug: %s 发动物理攻击' % self.name)
+                self.__life_force -= GLV.MAX_LIFE_FORCE * 0.05
+                print('--debug: 物理攻击后消耗：生命力降为 %d ' % self.__life_force)
+                # 如果有物理吸血技能则恢复点生命力
+                if self.physical_suck > 0:
+                    self.__life_force += self.physical_suck * self.physical_attack
+                    print('--debug: 物理攻击后回血：生命力升为 %d ' % self.__life_force)
+            # 仅当剩余法力>10%且有法攻时，才能发起法力攻击，消耗 10% 最大法力
+            if (self.cur_mana_power > 0.1 * GLV.MAX_MANA_POWER) and (self.mana_attack > 0):
+                print('--debug: %s 发动法术攻击' % self.name)
+                self.__mana_power -= GLV.MAX_MANA_POWER * 0.1
+                print('--debug: 法术攻击后消耗：法力降为 %d ' % self.__mana_power)
+                # 考虑装备的回蓝
+                if self.restore_mana > 0:
+                    print('--debug: 法术攻击后回蓝：法力升为 %d ' % self.__mana_power)
+                    self.__mana_power += self.__mana_power * self.restore_mana
+
+            # 每次攻击都伴随着移动，攻击方要消耗 3% 最大生命力
+            self.__life_force -= GLV.MAX_LIFE_FORCE * 0.03
+            print('--debug: 移动后消耗：生命力降为 %d ' % self.__life_force)
+
+        return
+
+    # 声明必须是被另外一个士兵攻击
+    def be_attacked(self, enemy):
+        # 只有健康状态才能承受攻击
+        if self.check_status() == GLV.STATUS_OF_SOLDIER[0]:
+            # 承受法术攻击
+            if self.cur_mana_defense > 0:
+                self.__mana_defense -= GLV.MAX_DEFENSE * 0.1
+                self.__life_force -= enemy.mana_attack * 0.3
+            else:
+                self.__life_force -= enemy.mana_attack
+
+            # 承受物理攻击
+            if self.cur_physical_defense > 0:
+                self.__physical_defense -= GLV.MAX_DEFENSE * 0.1  # 削弱物防力
+                # 要考虑对方的物攻-暴击率影响
+                if enemy.critical_strik > 0:
+                    if random.random() < enemy.critical_strik:
+                        # 对方暴击生效，受到双倍打击
+                        self.__life_force -= enemy.physical_attack * 0.6
+                    else:
+                        self.__life_force -= enemy.physical_attack * 0.3
+                else:
+                    self.__life_force -= enemy.physical_attack * 0.3
+            else:
+                if enemy.critical_strik > 0:
+                    if random.random() < enemy.critical_strik:
+                        # 对方暴击生效，受到双倍打击
+                        self.__life_force -= enemy.physical_attack * 2
+                    else:
+                        self.__life_force -= enemy.physical_attack * 1
+                else:
+                    self.__life_force -= enemy.physical_attack * 1
+
+        return
