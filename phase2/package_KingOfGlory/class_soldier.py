@@ -184,7 +184,7 @@ class Soldier():
             # 如果能发起物理攻击，则消耗 10% 最大生命力
             if self.physical_attack > 0:
                 print('--debug: %s 发动物理攻击' % self.name)
-                self.__life_force -= GLV.MAX_LIFE_FORCE * 0.05
+                self.__life_force -= GLV.MAX_LIFE_FORCE * 0.01
                 print('--debug: 物理攻击消耗后：生命力降为 %d ' % self.__life_force)
                 # 如果有物理吸血技能则恢复点生命力
                 if self.physical_suck > 0:
@@ -192,8 +192,10 @@ class Soldier():
                     print('--debug: 物理攻击后回血：生命力升为 %d ' % self.__life_force)
 
             # 每次攻击都伴随着移动，攻击方要消耗 3% 最大生命力
-            self.__life_force -= GLV.MAX_LIFE_FORCE * 0.03
+            self.__life_force -= GLV.MAX_LIFE_FORCE * 0.01
             print('--debug: 移动后消耗：生命力降为 %d ' % self.__life_force)
+            self.__move_speed *= 0.9 #攻击方的速度额外下降 10%
+            print('--debug: 移动后移动速度降为 %d ' % self.__move_speed)
 
         return
 
@@ -207,7 +209,7 @@ class Soldier():
                 # 承受法术攻击
                 if self.cur_mana_defense > 0:
                     print('--debug: 有 %d 的法防' % (self.cur_mana_defense))
-                    self.__mana_defense -= GLV.MAX_DEFENSE * 0.1
+                    self.__mana_defense -= GLV.MAX_DEFENSE * 0.3
                     print('--debug: 受法攻后法防降为 %d ' % (self.__mana_defense))
                     self.__life_force -= enemy.mana_attack * 0.3
                     print('--debug: 受法攻后生命力降为 %d ' % (self.__life_force))
@@ -221,7 +223,7 @@ class Soldier():
                 # 承受物理攻击
                 if self.cur_physical_defense > 0:
                     print('--debug: 有 %d 的物防' % (self.cur_physical_defense))
-                    self.__physical_defense -= GLV.MAX_DEFENSE * 0.1  # 削弱物防力
+                    self.__physical_defense -= GLV.MAX_DEFENSE * 0.3  # 削弱物防力
                     print('--debug: 受物攻后物防降为 %d ' % (self.__physical_defense))
                     # 要考虑对方的物攻-暴击率影响
                     if enemy.critical_strik > 0:
@@ -255,8 +257,8 @@ class Soldier():
                         print('--debug: 无暴击，受物攻后生命力降为 %d ' %
                               (self.__life_force))
 
-            # 每次攻击都伴随着移动，被攻击方要消耗 5% 最大生命力
-            self.__life_force -= GLV.MAX_LIFE_FORCE * 0.05
+            # 每次攻击都伴随着移动，被攻击方要消耗 3% 最大生命力
+            self.__life_force -= GLV.MAX_LIFE_FORCE * 0.03
             print('--debug: 移动后消耗：生命力降为 %d ' % self.__life_force)
 
         else:

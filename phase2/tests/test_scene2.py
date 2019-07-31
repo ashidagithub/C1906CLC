@@ -25,24 +25,26 @@ from package_KingOfGlory.class_eq_move import EQMove
 
 
 print('\n----------交战前---------')
-# 创建一个地方士兵
-h = Hero()
-eq = EQMana()
-enemy = Soldier(h, eq)
-enemy.show_me()
-
 # 创建一个我方士兵
 h = Hero()
-eq = EQMove()
+eq = EQAttack()
 our_sol = Soldier(h, eq)
+print('\n***我方士兵***', end='')
 our_sol.show_me()
+
+# 创建一个敌方士兵
+h = Hero()
+eq = EQDefense()
+enemy = Soldier(h, eq)
+print('\n***敌方士兵***', end='')
+enemy.show_me()
 
 # 连续交手，至乙方失去战斗力或死亡为止
 no_body_lose = True
 fight_cnt = 0
 while no_body_lose:
     # 交手
-    print('\n----------交战一次---------')
+    print('\n----------第 %d 次交战---------' % (fight_cnt+1))
     if our_sol.move_speed > enemy.move_speed:
         print('\n----------交战中：攻击方的变化---------')
         our_sol.attack()
@@ -55,14 +57,14 @@ while no_body_lose:
         our_sol.be_attacked(enemy)
 
     # 查看是否有输者
-    if our_sol.check_status() <> GLV.STATUS_OF_SOLDIER[0]:
+    if our_sol.check_status() != GLV.STATUS_OF_SOLDIER[0]:
         no_body_lose = False
-    elif enemy.check_status() <> GLV.STATUS_OF_SOLDIER[0]:
+    elif enemy.check_status() != GLV.STATUS_OF_SOLDIER[0]:
         no_body_lose = False
     else:
         no_body_lose = True
         fight_cnt += 1
 
-print('\n*****交战结束，共计交手 %d 次' % fight_cnt)
-print('我方士兵状态： %s' % our_sol.check_status())
-print('敌方士兵状态： %s' % enemy.check_status())
+print('\n*****交战结束，共计交手 %d 次' % (fight_cnt+1))
+print('我方士兵 %s 状态： %s' % (our_sol.name, our_sol.check_status()))
+print('敌方士兵 %s 状态： %s' % (enemy.name, enemy.check_status()))
