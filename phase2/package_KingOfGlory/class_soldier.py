@@ -173,7 +173,7 @@ class Soldier():
         if self.check_status() == GLV.STATUS_OF_SOLDIER[0]:
             # 仅当剩余法力>10%且有法攻时，才能发起法力攻击，消耗 10% 最大法力
             if (self.cur_mana_power > 0.1 * GLV.MAX_MANA_POWER) and (self.mana_attack > 0):
-                print('--debug: %s 发动法术攻击' % self.name)
+                print('--debug: %s 法力足够发动法术攻击' % self.name)
                 self.__mana_power -= GLV.MAX_MANA_POWER * 0.1
                 print('--debug: 法术攻击后消耗：法力降为 %d ' % self.__mana_power)
                 # 考虑装备的回蓝
@@ -181,10 +181,10 @@ class Soldier():
                     self.__mana_power += self.__mana_power * self.restore_mana
                     print('--debug: 法术攻击后回蓝：法力升为 %d ' % self.__mana_power)
 
-            # 如果能发起物理攻击，则消耗 10% 最大生命力
-            if (self.physical_attack > 0) and (self.cur_life_force > 0.05 * GLV.MAX_LIFE_FORCE):
-                print('--debug: %s 发动物理攻击' % self.name)
-                self.__life_force -= GLV.MAX_LIFE_FORCE * 0.01
+            # 如果能发起物理攻击，则需消耗生命力
+            if (self.physical_attack > 0) and (self.cur_life_force > 0.1 * GLV.MAX_LIFE_FORCE):
+                print('--debug: %s 体力足够发动物理攻击' % self.name)
+                self.__life_force -= GLV.MAX_LIFE_FORCE * 0.05
                 print('--debug: 物理攻击消耗后：生命力降为 %d ' % self.__life_force)
                 # 如果有物理吸血技能则恢复点生命力
                 if self.physical_suck > 0:
