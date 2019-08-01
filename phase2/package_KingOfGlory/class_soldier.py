@@ -182,7 +182,7 @@ class Soldier():
                     print('--debug: 法术攻击后回蓝：法力升为 %d ' % self.__mana_power)
 
             # 如果能发起物理攻击，则消耗 10% 最大生命力
-            if self.physical_attack > 0:
+            if (self.physical_attack > 0) and (self.cur_life_force > 0.05 * GLV.MAX_LIFE_FORCE):
                 print('--debug: %s 发动物理攻击' % self.name)
                 self.__life_force -= GLV.MAX_LIFE_FORCE * 0.01
                 print('--debug: 物理攻击消耗后：生命力降为 %d ' % self.__life_force)
