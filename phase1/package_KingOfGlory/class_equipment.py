@@ -32,9 +32,6 @@ class Equipment():
     add_life_force = 0
     add_mana_power = 0
 
-    #effect = 0      # 有效条件
-    #forge_times = 0 # 可锻造次数
-
     def __init__(self):
         ''' 初始化一个道具类
             在父类中初始化不赋值
