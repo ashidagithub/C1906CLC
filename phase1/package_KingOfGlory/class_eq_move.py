@@ -65,6 +65,8 @@ class EQMove(Equipment):
             self.add_mana_defense += 0.05 * GLV.MAX_DEFENSE
         elif skill_num == 3:  # +回蓝
             self.restore_mana_power += random.uniform(0.01, 0.1)
+            if self.restore_mana_power >= 0.1:
+                self.restore_mana_power = 0.1
         elif skill_num == 4:  # +移动速度
             self.add_move_speed += 0.05 * GLV.MAX_MOVE_SPEED
         elif skill_num == 5:  # +最大生命

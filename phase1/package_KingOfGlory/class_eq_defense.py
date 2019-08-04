@@ -92,6 +92,8 @@ class EQDefense(Equipment):
             pass
         elif skill_num == 10:  # +回血
             self.restore_life_force += random.uniform(0.01, 0.1)
+            if self.restore_life_force >= 0.1:
+                self.restore_life_force = 0.1
         else:
             pass
 
