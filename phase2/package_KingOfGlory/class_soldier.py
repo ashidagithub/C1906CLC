@@ -186,6 +186,9 @@ class Soldier():
                 print('--debug: %s 体力足够发动物理攻击' % self.name)
                 self.__life_force -= GLV.MAX_LIFE_FORCE * 0.05
                 print('--debug: 物理攻击消耗后：生命力降为 %d ' % self.__life_force)
+                # 如果有回血技能则恢复点生命力
+                if self.restore_life_force > 0:
+                    self.__life_force += self.__life_force * self.restore_life_force
                 # 如果有物理吸血技能则恢复点生命力
                 if self.physical_suck > 0:
                     self.__life_force += self.physical_suck * self.physical_attack
