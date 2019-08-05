@@ -54,3 +54,8 @@ MAX_FORGE_TIMES = 20
 
 # 定义士兵当前状态
 STATUS_OF_SOLDIER = ('STRONG','ALLEYS','DEAD')
+DICT_OF_SOLDIER_STATUS = {
+    'STRONG':'健壮可战',
+    'ALLEYS':'苟且偷生',
+    'DEAD':'阵亡'
+}

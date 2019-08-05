@@ -66,5 +66,5 @@ while no_body_lose:
         fight_cnt += 1
 
 print('\n*****交战结束，共计交手 %d 次' % (fight_cnt+1))
-print('我方士兵 %s 状态： %s' % (our_sol.name, our_sol.check_status()))
-print('敌方士兵 %s 状态： %s' % (enemy.name, enemy.check_status()))
+print('我方士兵 %s 状态： %s' % (our_sol.name, GLV.DICT_OF_SOLDIER_STATUS[our_sol.check_status()]))
+print('敌方士兵 %s 状态： %s' % (enemy.name, GLV.DICT_OF_SOLDIER_STATUS[enemy.check_status()]))
