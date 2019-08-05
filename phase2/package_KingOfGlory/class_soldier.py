@@ -21,7 +21,6 @@ from package_KingOfGlory.class_eq_defense import EQDefense
 from package_KingOfGlory.class_eq_attack import EQAttack
 from package_KingOfGlory.class_hero import Hero
 
-
 class Soldier():
 
     def __init__(self, h, *arg):
@@ -46,14 +45,14 @@ class Soldier():
         self.__restore_mana = eq.restore_mana_power  # 回蓝
 
         # 仅部分道具有的特殊技能
-        self.__critical_strik = 0.0
+        self.__critical_strike = 0.0
         self.__physical_suck = 0.0
         self.__mana_attack = 0
         self.__restore_life_force = 0.0
 
         if type(eq) is EQAttack:
             self.__weapon_type = '攻击类'
-            self.__critical_strik = eq.critical_strik
+            self.__critical_strike = eq.critical_strike
             self.__physical_suck = eq.physical_suck
         elif type(eq) is EQDefense:
             self.__weapon_type = '防御类'
@@ -90,7 +89,7 @@ class Soldier():
         print('移动速度=%3d' % (self.move_speed))
 
         # print('\n**不变的固有能力（依靠道具才具备的能力）**')
-        print('暴击率=%0.2f\t' % (self.critical_strik), end='')
+        print('暴击率=%0.2f\t' % (self.critical_strike), end='')
         print('物理吸血=%0.2f\t' % (self.physical_suck), end='')
         print('回血=%0.2f\t' % (self.restore_life_force), end='')
         print('回蓝=%0.2f' % (self.restore_mana))
@@ -128,8 +127,8 @@ class Soldier():
         return self.__restore_mana
 
     @property  # 暴击率%（不变）
-    def critical_strik(self):
-        return self.__critical_strik
+    def critical_strike(self):
+        return self.__critical_strike
 
     @property  # 物理吸血%（不变）
     def physical_suck(self):
@@ -172,7 +171,7 @@ class Soldier():
         # 只有健康状态才能攻击
         if self.check_status() == GLV.STATUS_OF_SOLDIER[0]:
             # 仅当剩余法力>10%且有法攻时，才能发起法力攻击，消耗 10% 最大法力
-            if (self.cur_mana_power > 0.1 * GLV.MAX_MANA_POWER) and (self.mana_attack > 0):
+            if (self.__mana_power > 0.1 * GLV.MAX_MANA_POWER) and (self.mana_attack > 0):
                 print('--debug: %s 法力足够发动法术攻击' % self.name)
                 self.__mana_power -= GLV.MAX_MANA_POWER * 0.1
                 print('--debug: 法术攻击后消耗：法力降为 %d ' % self.__mana_power)
@@ -182,7 +181,7 @@ class Soldier():
                     print('--debug: 法术攻击后回蓝：法力升为 %d ' % self.__mana_power)
 
             # 如果能发起物理攻击，则需消耗生命力
-            if (self.physical_attack > 0) and (self.cur_life_force > 0.1 * GLV.MAX_LIFE_FORCE):
+            if (self.physical_attack > 0) and (self.__life_force > 0.1 * GLV.MAX_LIFE_FORCE):
                 print('--debug: %s 体力足够发动物理攻击' % self.name)
                 self.__life_force -= GLV.MAX_LIFE_FORCE * 0.05
                 print('--debug: 物理攻击消耗后：生命力降为 %d ' % self.__life_force)
@@ -197,7 +196,7 @@ class Soldier():
             # 每次攻击都伴随着移动，攻击方要消耗 3% 最大生命力
             self.__life_force -= GLV.MAX_LIFE_FORCE * 0.01
             print('--debug: 移动后消耗：生命力降为 %d ' % self.__life_force)
-            self.__move_speed *= 0.9 #攻击方的速度额外下降 10%
+            self.__move_speed *= 0.9  # 攻击方的速度额外下降 10%
             print('--debug: 移动后移动速度降为 %d ' % self.__move_speed)
 
         return
@@ -207,60 +206,74 @@ class Soldier():
         # 只有健康状态才能承受攻击
         if self.check_status() == GLV.STATUS_OF_SOLDIER[0]:
             # 当敌人具备法术攻击力，且敌人法力>10% 时才遭受法术攻击
-            if (enemy.mana_attack > 0) and (enemy.cur_mana_power > GLV.MAX_MANA_POWER * 0.1):
+            if (enemy.mana_attack > 0) and (enemy.__mana_power > GLV.MAX_MANA_POWER * 0.1):
                 print('--debug: %s 遭受 %s 的法术攻击' % (self.name, enemy.name))
                 # 承受法术攻击
-                if self.cur_mana_defense > 0:
-                    print('--debug: 有 %d 的法防' % (self.cur_mana_defense))
-                    self.__mana_defense -= GLV.MAX_DEFENSE * 0.3
-                    print('--debug: 受法攻后法防降为 %d ' % (self.__mana_defense))
-                    self.__life_force -= enemy.mana_attack * 0.3
+                if self.__mana_defense > 0:
+                    print('--debug: 有 %d 的法防' % (self.__mana_defense))
+                    #self.__mana_defense -= GLV.MAX_DEFENSE * 0.3
+                    #print('--debug: 受法攻后法防降为 %d ' % (self.__mana_defense))
+                    if enemy.mana_attack > self.__mana_defense:
+                        self.__life_force -= enemy.mana_attack - self.__mana_defense
+                    else:
+                        # Optional 受法攻后法防是否要降低？
+                        self.__mana_defense *= 0.9
+                        pass
                     print('--debug: 受法攻后生命力降为 %d ' % (self.__life_force))
                 else:
                     self.__life_force -= enemy.mana_attack
                     print('--debug: 无法防，受攻击后生命力降为 %d ' % (self.__life_force))
 
             # 当敌人具备物理攻击力，且敌人生命力>10% 时才遭受物理攻击
-            if enemy.physical_attack > 0 and enemy.cur_life_force > GLV.MAX_LIFE_FORCE * 0.1:
+            if enemy.physical_attack > 0 and enemy.__life_force > GLV.MAX_LIFE_FORCE * 0.1:
                 print('--debug: %s 遭受 %s 的物理攻击' % (self.name, enemy.name))
-                # 承受物理攻击
-                if self.cur_physical_defense > 0:
-                    print('--debug: 有 %d 的物防' % (self.cur_physical_defense))
-                    self.__physical_defense -= GLV.MAX_DEFENSE * 0.3  # 削弱物防力
-                    print('--debug: 受物攻后物防降为 %d ' % (self.__physical_defense))
-                    # 要考虑对方的物攻-暴击率影响
-                    if enemy.critical_strik > 0:
-                        if random.random() < enemy.critical_strik:
-                            # 对方暴击生效，受到双倍打击
-                            self.__life_force -= enemy.physical_attack * 0.6
-                            print('--debug: 敌方暴击生效，受物攻后生命力降为 %d ' %
-                                  (self.__life_force))
-                        else:
-                            self.__life_force -= enemy.physical_attack * 0.3
-                            print('--debug: 敌方有暴击但无效，受物攻后生命力降为 %d ' %
-                                  (self.__life_force))
-                    else:
-                        self.__life_force -= enemy.physical_attack * 0.3
-                        print('--debug: 无暴击，受物攻后生命力降为 %d ' %
-                              (self.__life_force))
-                else:
-                    print('--debug: 没有物防')
-                    if enemy.critical_strik > 0:
-                        if random.random() < enemy.critical_strik:
-                            # 对方暴击生效，受到双倍打击
-                            self.__life_force -= enemy.physical_attack * 2
-                            print('--debug: 敌方暴击生效，受物攻后生命力降为 %d ' %
-                                  (self.__life_force))
-                        else:
-                            self.__life_force -= enemy.physical_attack * 1
-                            print('--debug: 敌方有暴击但无效，受物攻后生命力降为 %d ' %
-                                  (self.__life_force))
-                    else:
-                        self.__life_force -= enemy.physical_attack * 1
-                        print('--debug: 无暴击，受物攻后生命力降为 %d ' %
-                              (self.__life_force))
 
-            # 每次攻击都伴随着移动，被攻击方要消耗 3% 最大生命力
+                hurt = -1
+
+                # 承受物理攻击
+                if self.__physical_defense > 0:
+                    print('--debug: 有 %d 的物防' % (self.__physical_defense))
+                    # 要考虑对方的物攻-暴击率影响
+                    if enemy.critical_strike > 0:
+                        if random.random() < enemy.critical_strike:
+                            # 对方暴击生效，受到双倍打击
+                            hurt = enemy.physical_attack * 2 - self.__physical_defense
+                            print('--debug: 敌方暴击生效，%d伤害值 = %d物攻*2 - %d物防' %
+                                  (hurt, enemy.physical_attack, self.__physical_defense))
+                        else:
+                            hurt = enemy.physical_attack - self.__physical_defense
+                            print('--debug: 敌方有暴击但无效，%d伤害值 = %d物攻 - %d物防' %
+                                  (hurt, enemy.physical_attack, self.__physical_defense))
+                    else:
+                        hurt = enemy.physical_attack - self.__physical_defense
+                        print('--debug: 无暴击，%d伤害值 = %d物攻 - %d物防' %
+                              (hurt, enemy.physical_attack, self.__physical_defense))
+                    # Optional # 削弱物防力
+                    self.__physical_defense -= self.__physical_defense * 0.9
+                    print('--debug: 受物攻后物防降为 %d ' % (self.__physical_defense))
+                else:
+                    print('--debug: 居然没有物防')
+                    if enemy.critical_strike > 0:
+                        if random.random() < enemy.critical_strike:
+                            # 对方暴击生效，受到双倍打击
+                            hurt = enemy.physical_attack * 2
+                            print('--debug: 敌方暴击生效，%d伤害值 = %d物攻*2 ' %
+                                  (hurt, enemy.physical_attack))
+                        else:
+                            hurt = enemy.physical_attack
+                            print('--debug: 敌方有暴击但无效，%d伤害值 = %d物攻 ' %
+                                  (hurt, enemy.physical_attack))
+                    else:
+                        hurt = enemy.physical_attack
+                        print('--debug: 敌方有暴击但无效，%d伤害值 = %d物攻 ' %
+                              (hurt, enemy.physical_attack))
+                # 仅当伤害值为正时才减去生命力
+                if hurt > 0:
+                    print('--debug: 原生命力为 %d, ' % self.__life_force,  end='')
+                    self.__life_force -= hurt
+                    print('伤害值为 %d, 受攻击后变为 %d' % (hurt, self.__life_force))
+
+            # 每次被攻击都伴随着移动，被攻击方要消耗 3% 最大生命力
             self.__life_force -= GLV.MAX_LIFE_FORCE * 0.03
             print('--debug: 移动后消耗：生命力降为 %d ' % self.__life_force)
 

@@ -21,7 +21,7 @@ from package_KingOfGlory.class_equipment import Equipment
 class EQAttack(Equipment):
 
     # 添加独有加成
-    critical_strik = 0.0
+    critical_strike = 0.0
     physical_suck = 0.0
 
     def __init__(self):
@@ -38,7 +38,7 @@ class EQAttack(Equipment):
 
     def show_me_unique(self):
         print('-----独有加成-----')
-        print('       +暴击率:%0.2f' % (self.critical_strik))
+        print('       +暴击率:%0.2f' % (self.critical_strike))
         print('     +物理吸血:%0.2f' % (self.physical_suck))
         print('-----------------')
         return
@@ -95,9 +95,9 @@ class EQAttack(Equipment):
         elif skill_num == 6:  # +最大法力
             self.add_mana_power += 0.05 * GLV.MAX_MANA_POWER
         elif skill_num == 7:  # +暴击率
-            self.critical_strik = random.uniform(0.1, 0.5)
-            if self.critical_strik>= 0.5:
-                self.critical_strik = 0.5
+            self.critical_strike = random.uniform(0.1, 0.5)
+            if self.critical_strike>= 0.5:
+                self.critical_strike = 0.5
         elif skill_num == 8:  # +物理吸血
             self.physical_suck = random.uniform(0.01, 0.1)
             if self.physical_suck >= 0.1:
